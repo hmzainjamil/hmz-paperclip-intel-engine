@@ -1,81 +1,103 @@
 # hmz-paperclip-intel-engine
+> Competitive intelligence — Meta Ad Library + Apollo + news scraping daily. Part of the DigiMinds Paperclip automation engine suite.
 
-> **Autonomous competitor intelligence + market signal engine | runs 10:00 AM daily | DigiMinds strategic awareness**
+[![paperclip](https://img.shields.io/badge/Paperclip-engine-blue?style=flat&labelColor=555)](https://github.com/paperclipai/paperclip)
+[![mae](https://img.shields.io/badge/MAE-powered-green?style=flat&labelColor=555)](.)
+[![tools](https://img.shields.io/badge/tools-Crawlee-orange?style=flat&labelColor=555)](.)
+[![tier0](https://img.shields.io/badge/tier0-zero--cost-purple?style=flat&labelColor=555)](.)
+[![license](https://img.shields.io/badge/license-MIT-lightgrey?style=flat&labelColor=555)](LICENSE)
 
-[![schedule](https://img.shields.io/badge/schedule-10%3A00AM_daily-blue?style=flat)](.) [![intel](https://img.shields.io/badge/output-competitor_intel-red?style=flat)](.) [![status](https://img.shields.io/badge/status-always_on-brightgreen?style=flat)](.) [![company](https://img.shields.io/badge/company-DigiMinds-orange?style=flat)](.)
-
-[Overview](#overview) · [Sources](#sources) · [Signals](#signals) · [Output](#output) · [Tips](#tips)
-
----
-
-## 🧠 OVERVIEW
-
-Paperclip Intel Engine scans the competitive landscape every morning at 10 AM. It monitors competitor ad activity, pricing changes, new service launches, client wins/losses, and platform policy changes that could affect DigiMinds positioning. Results feed directly into CEO loop context.
-
-| Component | Value |
-|---|---|
-| Trigger | Daily 10:00 AM (LaunchAgent) |
-| Scope | Top 10 PPC agency competitors + Google/Meta platform changes |
-| Model | Groq Llama 3 + Gemini Flash (zero Claude tokens) |
-| Output | Intel brief → Paperclip API → CEO loop context |
+[concepts](#concepts) · [architecture](#architecture) · [tips](#tips) · [startups](#startups) · [star](#star)
 
 ---
 
-## ⚙️ SOURCES MONITORED
+## 🧠 CONCEPTS <a id="concepts"></a>
 
-| Source | Signal | Method |
+| Feature | Location | Description |
 |---|---|---|
-| Google Ads Transparency Center | Competitor ad creative changes | Apify actor |
-| Meta Ad Library | Competitor Facebook/Instagram ads | Apify actor |
-| LinkedIn | New hires, job posts, service updates | Apify scraper |
-| Google News | Agency news, PPC industry updates | News API |
-| SimilarWeb (public) | Competitor traffic trends | Apify |
-| Agency websites | Pricing, service page changes | Diff monitoring |
-| Clutch.co | New reviews on competitor profiles | Scraper |
+| [**Core Engine**](engine/) | `engine/` | Main orchestration loop — reads from Paperclip → executes → reports back |
+| [**Paperclip Sync**](sync/) | `sync/` | Bidirectional sync with Paperclip API at localhost:3100 |
+| [**MAE Integration**](mae/) | `mae/` | Routes tasks through MAE swarm — wave-batched, RAM-safe |
+| [**Tier 0 Routing**](routing/) | `routing/` | Tools used: Crawlee · Apify · Meta Library API |
+| [**Output Storage**](outputs/) | `outputs/` | Results saved to `~/.claude/tcc-logs/` + synced to Paperclip |
+| [**LaunchAgent**](launchagents/) | `launchagents/` | Optional persistent LaunchAgent — runs engine on schedule |
 
----
+### 🔥 Hot
 
-## 🎯 SIGNAL TYPES
-
-| Signal Type | Meaning | Priority |
+| Feature | Location | Description |
 |---|---|---|
-| Competitor drops price | Market pressure — review DigiMinds pricing | HIGH |
-| Competitor launches new service | Potential gap in DigiMinds offer | HIGH |
-| Platform policy change (Google/Meta) | Client campaigns need updating | CRITICAL |
-| Competitor loses major client | Outreach opportunity | MEDIUM |
-| Competitor hires senior talent | They're scaling — watch closely | MEDIUM |
-| New entrant to market | Landscape shift — update ICP | MEDIUM |
+| [**Zero-cost execution**](engine/) | `engine/` | All processing via Tier 0 models — Groq, Gemini, Kimi, Bytez |
+| [**Auto-retry**](engine/) | `engine/` | Failed tasks auto-retry with fallback model via TCC retry mechanism |
+| [**Paperclip goal sync**](sync/) | `sync/` | Reads outstanding goals from Paperclip every run cycle |
 
 ---
 
-## 💡 TIPS
+## ⚙️ ARCHITECTURE <a id="architecture"></a>
 
-■ **Intelligence Quality (4)**
+```
+Paperclip CEO Layer (localhost:3100)
+         │
+         │ reads goals + tasks
+         ▼
+    Intel Engine Engine
+         │
+    MAE decompose
+         │
+    Tier 0 swarm (Crawlee · Apify · Meta Library API)
+         │
+    synthesis + output
+         │
+         │ reports results
+         ▼
+Paperclip CEO Layer (updated goals)
+```
+
+| Phase | Model | Purpose |
+|---|---|---|
+| Decompose | Groq llama-3.1-8b-instant | Break goal into sub-tasks |
+| Execute | Crawlee + more | Run specialist tasks |
+| Synthesize | Groq llama-3.3-70b-versatile | Merge outputs |
+| Report | Paperclip API | Update goal status |
+
+---
+
+## 💡 TIPS AND TRICKS (8) <a id="tips"></a>
+
+[engine-ops](#tips-ops) · [paperclip-integration](#tips-pc)
+
+<a id="tips-ops"></a>
+■ **Engine Operations (4)**
+
 | Tip | Source |
 |---|---|
-| Meta Ad Library is the most reliable competitor signal — check ad volume changes | Intel SOP |
-| Google Ads Transparency shows exact competitor messaging angles to counter | PPC playbook |
-| Clutch reviews reveal competitor weaknesses — mine them for sales ammo | Sales SOP |
-| Platform policy changes need same-day CEO loop escalation — never wait | Operations rule |
+| Start: `python3 engine/main.py` or load LaunchAgent for persistent operation | [hmzainjamil](https://github.com/hmzainjamil) |
+| `mae run "goal"` triggers this engine via TCC routing when keyword matches | [hmzainjamil](https://github.com/hmzainjamil) |
+| All outputs go to `~/.claude/tcc-logs/mae-TIMESTAMP.md` — searchable history | [hmzainjamil](https://github.com/hmzainjamil) |
+| `tcc watch` monitors engine task queue in real-time — see active/pending/done | [hmzainjamil](https://github.com/hmzainjamil) |
 
-■ **Operations (3)**
+<a id="tips-pc"></a>
+■ **Paperclip Integration (4)**
+
 | Tip | Source |
 |---|---|
-| Intel brief is stored at `/api/intel/latest` — CEO loop reads it every 6h | API ref |
-| Historical intel at `/api/intel?days=30` shows trend lines | API ref |
-| Custom competitor can be added via `/api/intel/competitors/add` | API ref |
+| Paperclip must be running: `cd ~/installed-repos/paperclip && pnpm dev` | [Paperclip AI](https://github.com/paperclipai) |
+| Company ID `c5066522-bacc-4a28-b700-6590cbe366ec` scopes all API calls to DigiMinds | [hmzainjamil](https://github.com/hmzainjamil) |
+| Engine falls back to `llm-burst` if Paperclip API returns 404 | [hmzainjamil](https://github.com/hmzainjamil) |
+| Set engine goals via Paperclip dashboard → engine picks up on next run cycle | [Paperclip AI](https://github.com/paperclipai) |
 
 ---
 
-## ☠️ TOOLS REPLACED
+## ☠️ STARTUPS / BUSINESSES <a id="startups"></a>
 
-| Intel Engine | Replaced |
+| Feature | Replaced |
 |---|---|
-| Competitor monitoring | Manual weekly reviews |
-| Ad library checks | Manual ad library browsing |
-| Platform policy tracking | Forgetting to check until client complains |
-| Market signal detection | Gut feeling |
+| **Autonomous engine loop** | [AutoGPT](https://autogpt.net), [AgentGPT](https://agentgpt.reworkd.ai), [BabyAGI](https://github.com/yoheinakajima/babyagi) |
+| **Paperclip company OS** | [Notion AI](https://notion.so), [Monday.com](https://monday.com), [Asana](https://asana.com) |
+| **Zero-cost Tier 0 execution** | [CrewAI Cloud](https://crewai.com), [LangSmith](https://smith.langchain.com) |
+| **MAE swarm synthesis** | [LangGraph](https://langgraph.com), [AutoGen](https://github.com/microsoft/autogen) |
 
 ---
 
-*Part of [DigiMinds AI Agency Stack](https://github.com/hmzainjamil) — Paperclip autonomous intelligence*
+## Star History <a id="star"></a>
+
+[![Star History Chart](https://api.star-history.com/svg?repos=hmzainjamil/hmz-paperclip-intel-engine&type=Date)](https://star-history.com/#hmzainjamil/hmz-paperclip-intel-engine&Date)
