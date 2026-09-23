@@ -1,5 +1,9 @@
 # hmz-paperclip-intel-engine
 
+<!-- HMZ PORTFOLIO STANDARD -->
+> Portfolio status: active · Visibility: public · Source of truth: current repository source.
+<!-- END HMZ PORTFOLIO STANDARD -->
+
 <!-- HMZ PORTFOLIO CONTEXT START -->
 <p align="center">
   <a href="https://github.com/hmzainjamil/hmz-paperclip-intel-engine">Repository</a> · <a href="https://github.com/hmzainjamil/hmz-paperclip-intel-engine/issues">Issues</a> · <a href="https://github.com/hmzainjamil/hmz-paperclip-intel-engine/commits/main">Commits</a>
