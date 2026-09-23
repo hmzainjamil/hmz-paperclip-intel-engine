@@ -1,5 +1,15 @@
 # hmz-paperclip-intel-engine
 
+<!-- HMZ PORTFOLIO CONTEXT START -->
+<p align="center">
+  <a href="https://github.com/hmzainjamil/hmz-paperclip-intel-engine">Repository</a> · <a href="https://github.com/hmzainjamil/hmz-paperclip-intel-engine/issues">Issues</a> · <a href="https://github.com/hmzainjamil/hmz-paperclip-intel-engine/commits/main">Commits</a>
+</p>
+<p align="center"><img alt="Last commit" src="https://img.shields.io/github/last-commit/hmzainjamil/hmz-paperclip-intel-engine.svg"> <img alt="Repository size" src="https://img.shields.io/github/repo-size/hmzainjamil/hmz-paperclip-intel-engine.svg"> <img alt="Visibility" src="https://img.shields.io/badge/visibility-public-blue"> <img alt="Status" src="https://img.shields.io/badge/status-active-success"></p>
+> Portfolio context: active public repository in the HMZ GitHub portfolio. Scope, commands, and evidence are defined by the source tree.
+<!-- HMZ PORTFOLIO CONTEXT END -->
+---
+
+
 ![v](https://img.shields.io/badge/version-2.0-blue?style=flat&labelColor=555) ![s](https://img.shields.io/badge/status-active-brightgreen?style=flat&labelColor=555) ![l](https://img.shields.io/badge/license-MIT-orange?style=flat&labelColor=555) ![m](https://img.shields.io/badge/models-Tier0-purple?style=flat&labelColor=555)
 
 > Paperclip intelligence engine — competitor monitoring, market research, trend detection, news aggregation, AI-generated insight reports.
